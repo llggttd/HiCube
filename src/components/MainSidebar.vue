@@ -21,20 +21,22 @@
       </form>   
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">HEADER</li>
-        <li v-bind:class="{'active': server.host === '192.168.1.5'}" v-bind:key="server.host"
-        v-for="server in servers">
-            <a href="#"><i class="fa fa-link"></i><span>{{ server.host }}</span></a>
+        <li v-bind:class="{'active': isActive(server), 'treeview': isCluster(server)}" v-bind:key="JSON.stringify(server)" v-for="server in servers" v-on:click="onSelected(this)">
+            <a href="#">
+              <i class="fa fa-plug" v-bind:class="{'text-success': isActive(server)}"></i>
+              <span v-if="isCluster(server)">reids集群</span>
+              <span v-else>{{ server.host }}</span>
+              <span v-if="isCluster(server)" class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+            </a>
+            <ul v-if="isCluster(server)" class="treeview-menu">
+              <li v-for="item in server" v-bind:key="JSON.stringify(item)">
+                <a href="#">
+                  <i class="fa fa-plug"></i>
+                  <span>{{ item.host }}: {{ item.port}}</span>
+                </a>
+              </li>
+            </ul>
         </li>
-        <li class="treeview">
-          <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-            <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="#">Link in level 2</a></li>
-            <li><a href="#">Link in level 2</a></li>
-          </ul>
         </li>
       </ul>
     </section>
@@ -47,32 +49,30 @@ export default {
   data() {
     return {
       servers: [
-        {
-          host: "192.168.1.1",
-          port: "30001"
-        },
-        {
-          host: "192.168.1.2",
-          port: "30001"
-        },
-        {
-          host: "192.168.1.3",
-          port: "30001"
-        },
-        {
-          host: "192.168.1.4",
-          port: "30001"
-        },
-        {
-          host: "192.168.1.5",
-          port: "30001"
-        },
-        {
-          host: "192.168.1.6",
-          port: "30001"
-        }
+        { host: "192.168.1.1", port: "30001" },
+        { host: "192.168.1.2", port: "30001" },
+        { host: "192.168.1.3", port: "30001" },
+        { host: "192.168.1.4", port: "30001" },
+        { host: "192.168.1.5", port: "30001" },
+        { host: "192.168.1.6", port: "30001" },
+        [
+          { host: "192.168.1.8", port: "30001" },
+          { host: "192.168.1.8", port: "30002" },
+          { host: "192.168.1.8", port: "30003" }
+        ]
       ]
+    };
+  },
+  methods: {
+    isActive: function(server) {
+      return server.host === "192.168.1.3";
+    },
+    isCluster: function(server) {
+      return Array.isArray(server);
+    },
+    onSelected: function (e) {
+      console.log(e)
     }
   }
-}
+};
 </script>
