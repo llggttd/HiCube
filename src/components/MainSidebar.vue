@@ -9,30 +9,20 @@
           <p>0z0ne</p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
-      </div>
-      <form action="#" method="get" class="sidebar-form">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
-          <span class="input-group-btn">
-              <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-              </button>
-            </span>
-        </div>
-      </form>   
-      <ul class="sidebar-menu" data-widget="tree">
+      </div> 
+      <ul class="sidebar-menu tree" data-widget="tree">
         <li class="header">HEADER</li>
-        <li v-bind:class="{'active': isActive(server), 'treeview': isCluster(server)}" v-bind:key="JSON.stringify(server)" v-for="server in servers" v-on:click="onSelected(this)">
+        <li :class="getItemClass(profile)" :key="index" v-for="(profile, index) in profiles" @click="onSelected(index)">
             <a href="#">
-              <i class="fa fa-plug" v-bind:class="{'text-success': isActive(server)}"></i>
-              <span v-if="isCluster(server)">reids集群</span>
-              <span v-else>{{ server.host }}</span>
-              <span v-if="isCluster(server)" class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+              <i class="fa fa-plug" v-bind:class="{'text-success': profile.connected}"></i>
+              <span>{{ profile.name }}</span>
+              <span v-if="profile.cluster" class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
             </a>
-            <ul v-if="isCluster(server)" class="treeview-menu">
-              <li v-for="item in server" v-bind:key="JSON.stringify(item)">
+            <ul v-if="profile.cluster" class="treeview-menu">
+              <li v-for="(server, index) in profile.servers" :key="index">
                 <a href="#">
-                  <i class="fa fa-plug"></i>
-                  <span>{{ item.host }}: {{ item.port}}</span>
+                  <i class="fa fa-circle"></i>
+                  <span>{{ server.host }}: {{ server.port}}</span>
                 </a>
               </li>
             </ul>
@@ -44,35 +34,106 @@
 </template>
 
 <script>
+import Bus from '../Bus'
+import BusEvent from '../BusEvent'
+
+const CURRENT_HOST = '192.168.1.5'
+let profiles = [{
+    name: '开发环境',
+    selected: false,
+    cluster: false,
+    connected: false,
+    servers: [{
+        host: "192.168.1.1",
+        port: "6379"
+    }]
+}, {
+    name: '测试环境',
+    selected: false,
+    cluster: false,
+    connected: false,
+    servers: [{
+        host: "192.168.1.2",
+        port: "6379"
+    }]
+}, {
+    name: '预发环境',
+    selected: false,
+    cluster: false,
+    connected: false,
+    servers: [{
+        host: "192.168.1.3",
+        port: "6379"
+    }]
+}, {
+    name: '正式环境',
+    selected: false,
+    cluster: false,
+    connected: false,
+    servers: [{
+        host: "192.168.1.4",
+        port: "6379"
+    }]
+}, {
+    name: '开发集群',
+    selected: false,
+    cluster: true,
+    connected: false,
+    servers: [{
+        host: "192.168.1.5",
+        port: "30001"
+    }, {
+        host: "192.168.1.5",
+        port: "30002"
+    }, {
+        host: "192.168.1.5",
+        port: "30003"
+    }]
+}, {
+    name: '测试集群',
+    selected: false,
+    cluster: true,
+    connected: false,
+    servers: [{
+        host: "192.168.1.5",
+        port: "30001"
+    }, {
+        host: "192.168.1.5",
+        port: "30002"
+    }, {
+        host: "192.168.1.5",
+        port: "30003"
+    }]
+}]
+
 export default {
   name: "MainSidebar",
   data() {
     return {
-      servers: [
-        { host: "192.168.1.1", port: "30001" },
-        { host: "192.168.1.2", port: "30001" },
-        { host: "192.168.1.3", port: "30001" },
-        { host: "192.168.1.4", port: "30001" },
-        { host: "192.168.1.5", port: "30001" },
-        { host: "192.168.1.6", port: "30001" },
-        [
-          { host: "192.168.1.8", port: "30001" },
-          { host: "192.168.1.8", port: "30002" },
-          { host: "192.168.1.8", port: "30003" }
-        ]
-      ]
-    };
+      profiles: profiles
+    }
   },
   methods: {
-    isActive: function(server) {
-      return server.host === "192.168.1.3";
+    getItemClass: function (profile) {
+      return {
+        'active': profile.selected,
+        'treeview': profile.cluster,
+      }
     },
-    isCluster: function(server) {
-      return Array.isArray(server);
+    changeSelectStatus: function (index) {
+      profiles.forEach(function (profile, i) {
+        if (i == index) {
+          profile.selected = true
+        } else {
+          profile.selected = false
+        }
+      })
     },
-    onSelected: function (e) {
-      console.log(e)
+    onSelected: function (index) {
+      this.changeSelectStatus(index)
+      Bus.$emit(BusEvent.ON_SERVER_ITEM_SELECTED, profiles[index])
+      console.log('EMIT -- ', index)
     }
   }
-};
+}
 </script>
