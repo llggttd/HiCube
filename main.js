@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 
 const path = require('path')
 const url = require('url')
@@ -40,13 +40,13 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', function() {
+app.on('ready', function () {
   log('ready')
   createWindow()
   app.setBadgeCount(11)
 })
 
-app.on('quit', function() {
+app.on('quit', function () {
   log('quit')
 })
 
@@ -60,6 +60,15 @@ app.on('window-all-closed', function () {
   }
 })
 
-
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+ipcMain.on('asynchronous-message', (event, arg) => {
+  console.log(arg)  // prints "ping"
+  event.sender.send('asynchronous-reply', 'pong')
+})
+
+ipcMain.on('synchronous-message', (event, arg) => {
+  console.log(arg)  // prints "ping"
+  event.returnValue = 'pong'
+})

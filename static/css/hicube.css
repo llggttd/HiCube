@@ -1,34 +1,10 @@
-.main-sidebar .sidebar-menu {
-    max-height: 640px;
-    overflow-x: hidden;
-    overflow-y: scroll;
+.content-wrapper .panel-value .key-info-block .key-string {
+    display: block;
+    margin-top: 0.4em;
+    word-break: break-word;
+    white-space: pre-wrap;
 }
 
-.sidebar-menu::-webkit-scrollbar {
-    width: 1px;
-    height: 1px;
+.content-wrapper .panel-value .value-info-block textarea {
+    resize: none;
 }
-
-.main-sidebar .sidebar-header {
-    width: 100%;
-    padding: 10px 15px;
-    color: #4b646f;
-    background: #1a2226;
-}
-
-.main-sidebar .sidebar-header span {
-    font-size: 12p;
-}
-
-.sidebar-menu li a {
-   padding: 8px 5px 8px 15px
-}
-
-.sidebar-menu li a .fa-circle {
-    font-size: 10px;
- }
-
- .content .input-group {
-    padding-left: 20px;
-    padding-right: 20px;
- }

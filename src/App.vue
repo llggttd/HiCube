@@ -19,13 +19,13 @@ import MainFooter from '@/components/MainFooter'
 import ControlSidebar from '@/components/ControlSidebar'
 
 export default {
-  name: "app",
+  name: 'app',
   components: {
     MainHeader,
     MainSidebar,
     ContentWrapper,
     MainFooter,
-    ControlSidebar,
+    ControlSidebar
    }
 }
 </script>

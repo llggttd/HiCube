@@ -7,11 +7,11 @@
         </div>
         <div class="pull-left info">
           <p>0z0ne</p>
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
         </div>
-      </div> 
+      </div>
+      <a class="header"><i class="fa fa-tv"></i>服务器</a>
       <ul class="sidebar-menu tree" data-widget="tree">
-        <li class="header">HEADER</li>
         <li :class="getItemClass(profile)" :key="index" v-for="(profile, index) in profiles" @click="onSelected(index)">
             <a href="#">
               <i class="fa fa-plug" v-bind:class="{'text-success': profile.connected}"></i>
@@ -27,11 +27,42 @@
               </li>
             </ul>
         </li>
-        </li>
       </ul>
     </section>
   </aside>
 </template>
+
+<style scoped>
+.main-sidebar .header {
+  margin: 0px;
+  padding: 15px 25px;
+  font-size: 16px;
+  display: block;
+}
+.main-sidebar .header i {
+  margin-right: 8px;
+}
+.main-sidebar .user-panel,
+.main-sidebar .header {
+  background-color: #112a2c;
+}
+.main-sidebar .sidebar-menu {
+  /* max-height: 600px; */
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar-track {  
+  background-color: #000000;  
+}  
+
+
+
+</style>
 
 <script>
 import Bus from '../Bus'
@@ -45,6 +76,15 @@ let profiles = [{
     connected: false,
     servers: [{
         host: "192.168.1.1",
+        port: "6379"
+    }]
+}, {
+    name: '测试环境',
+    selected: false,
+    cluster: false,
+    connected: false,
+    servers: [{
+        host: "192.168.1.2",
         port: "6379"
     }]
 }, {
@@ -108,7 +148,7 @@ let profiles = [{
 
 export default {
   name: "MainSidebar",
-  data() {
+  data () {
     return {
       profiles: profiles
     }

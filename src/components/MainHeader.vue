@@ -10,31 +10,10 @@
       </a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <li class="dropdown messages-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-envelope-o"></i>
-              <span class="label label-success">4</span>
+          <li class="dropdown">
+            <a href="#" data-toggle="modal" data-target="#modal-add">
+              <i class="fa fa-plus"></i>
             </a>
-            <ul class="dropdown-menu">
-              <li class="header">You have 4 messages</li>
-              <li>
-                <ul class="menu">
-                  <li>
-                    <a href="#">
-                      <div class="pull-left">
-                        <img src="static/img/me.png" class="img-circle" alt="User Image">
-                      </div>
-                      <h4>
-                        Support Team
-                        <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                      </h4>
-                      <p>Why not buy a new awesome theme?</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="footer"><a href="#">See All Messages</a></li>
-            </ul>
           </li>
           <li class="dropdown notifications-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -53,36 +32,6 @@
                 </ul>
               </li>
               <li class="footer"><a href="#">View all</a></li>
-            </ul>
-          </li>
-          <li class="dropdown tasks-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-flag-o"></i>
-              <span class="label label-danger">9</span>
-            </a>
-            <ul class="dropdown-menu">
-              <li class="header">You have 9 tasks</li>
-              <li>
-                <ul class="menu">
-                  <li>
-                    <a href="#">
-                      <h3>
-                        Design some buttons
-                        <small class="pull-right">20%</small>
-                      </h3>
-                      <div class="progress xs">
-                        <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar"
-                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                          <span class="sr-only">20% Complete</span>
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="footer">
-                <a href="#">View all tasks</a>
-              </li>
             </ul>
           </li>
           <li class="dropdown user user-menu">
@@ -129,7 +78,44 @@
         </ul>
       </div>
     </nav>
+    <div class="modal fade" id="modal-add" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span></button>
+            <h4 class="modal-title">添加服务器</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+                <div class="box-body">
+                  <div class="form-group">
+                      <label for="inputName" class="col-sm-2 control-label">名称</label>
+                      <div class="col-sm-9">
+                        <input class="form-control" id="inputName" placeholder="配置名称" type="text">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="inputHost" class="col-sm-2 control-label">地址</label>
+                      <div class="col-sm-9">
+                        <input class="form-control" id="inputHost" placeholder="如：192.168.1.2:6379, 192.168.3:6379" type="text">
+                      </div>
+                  </div>
+                </div>
+                <!-- /.box-body -->
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary">保存</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
   </header>
+
 </template>
 
 <script>
@@ -142,3 +128,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.main-header {
+  z-index: 1050;
+}
+.modal-dialog {
+  margin: 90px auto;
+} 
+</style>
+
