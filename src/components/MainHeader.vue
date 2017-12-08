@@ -121,6 +121,7 @@
 <script>
 import {app, remote, ipcRenderer} from 'electron'
 import Store from 'electron-store'
+import ioredis from 'ioredis'
 
 let store = new Store()
 console.log(store.get('name'))

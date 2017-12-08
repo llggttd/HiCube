@@ -17,12 +17,13 @@ module.exports = {
     app: './src/main.js'
   },
   target: 'electron-renderer',
-  // externals: [
-  //   ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))
-  // ],
+  externals: [
+    ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))
+  ],
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
+    libraryTarget: 'commonjs2',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
