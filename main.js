@@ -2,11 +2,13 @@ const {app, BrowserWindow, ipcMain} = require('electron')
 
 const path = require('path')
 const url = require('url')
+const config = require('./config')
 const log = require('./log')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+const DEV = false
 
 function createWindow () {
   // Create the browser window.
@@ -17,12 +19,11 @@ function createWindow () {
     show: false
   })
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'html/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  let entry = url.format({ pathname: path.resolve(__dirname, 'html/index.html'), protocol: 'file' })
+  if (DEV) {
+    entry = url.format({ hostname: 'localhost', port: config.dev.port, protocol: 'http' })
+  }
+  mainWindow.loadURL(entry)
 
   mainWindow.once('ready-to-show', function () {
     mainWindow.show()

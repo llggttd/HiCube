@@ -3,6 +3,9 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const { dependencies } = require('../package.json')
+
+const whiteListedModules = ['vue', 'vue-router']
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -13,6 +16,10 @@ module.exports = {
   entry: {
     app: './src/main.js'
   },
+  target: 'electron-renderer',
+  // externals: [
+  //   ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))
+  // ],
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',

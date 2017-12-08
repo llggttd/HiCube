@@ -119,11 +119,24 @@
 </template>
 
 <script>
+import {app, remote, ipcRenderer} from 'electron'
+import Store from 'electron-store'
+
+let store = new Store()
+console.log(store.get('name'))
+console.log((app || remote.app).getPath('userData'))
+console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
+
+ipcRenderer.on('asynchronous-reply', (event, arg) => {
+  console.log(arg) // prints "pong"
+})
+
+ipcRenderer.send('asynchronous-message', 'ping')
+
 export default {
   name: 'MainHeader',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
     }
   }
 }

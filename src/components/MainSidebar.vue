@@ -10,7 +10,7 @@
           <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
         </div>
       </div>
-      <a class="header"><i class="fa fa-tv"></i>服务器</a>
+      <a class="header"><i class="fa fa-tv"></i><span>服务器</span></a>
       <ul class="sidebar-menu tree" data-widget="tree">
         <li :class="getItemClass(profile)" :key="index" v-for="(profile, index) in profiles" @click="onSelected(index)">
             <a href="#">
