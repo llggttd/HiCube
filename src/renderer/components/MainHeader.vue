@@ -92,13 +92,13 @@
                   <div class="form-group">
                       <label for="inputName" class="col-sm-2 control-label">名称</label>
                       <div class="col-sm-9">
-                        <input class="form-control" id="inputName" placeholder="配置名称" type="text">
+                        <input class="form-control" id="inputName" v-model="name" placeholder="配置名称" type="text">
                       </div>
                   </div>
                   <div class="form-group">
                       <label for="inputHost" class="col-sm-2 control-label">地址</label>
                       <div class="col-sm-9">
-                        <input class="form-control" id="inputHost" placeholder="如：192.168.1.2:6379, 192.168.3:6379" type="text">
+                        <input class="form-control" id="inputHost" v-model="url" placeholder="如：192.168.1.2:6379, 192.168.3:6379" type="text">
                       </div>
                   </div>
                 </div>
@@ -107,7 +107,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary">保存</button>
+            <button type="button" class="btn btn-primary" @click="onAddServer">添加</button>
           </div>
         </div>
         <!-- /.modal-content -->
@@ -118,31 +118,6 @@
 
 </template>
 
-<script>
-import {app, remote, ipcRenderer} from 'electron'
-import Store from 'electron-store'
-import ioredis from 'ioredis'
-
-let store = new Store()
-console.log(store.get('name'))
-console.log((app || remote.app).getPath('userData'))
-console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
-
-ipcRenderer.on('asynchronous-reply', (event, arg) => {
-  console.log(arg) // prints "pong"
-})
-
-ipcRenderer.send('asynchronous-message', 'ping')
-
-export default {
-  name: 'MainHeader',
-  data () {
-    return {
-    }
-  }
-}
-</script>
-
 <style scoped>
 .main-header {
   z-index: 1050;
@@ -151,4 +126,79 @@ export default {
   margin: 90px auto;
 } 
 </style>
+
+<script>
+import {app, remote, ipcRenderer} from 'electron'
+import Store from 'electron-store'
+import lodash from 'lodash'
+import uuid from 'uuid'
+
+console.log((app || remote.app).getPath('userData'))
+console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
+
+ipcRenderer.on('asynchronous-reply', (event, arg) => {
+  console.log(arg) // prints "pong"
+})
+
+function isValidUrls(urls) {
+  return urls.split(',').every(function (url) {
+    return new RegExp(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{2,5}$/).test(url)
+  })
+}
+
+function parseUrls(urls) {
+  return urls.split(',').map(function (url) {
+    let matcher = url.match(/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{2,5})$/)
+    return {
+      host: matcher[1],
+      port: matcher[2]
+    }
+  })
+}
+
+function addProfile(profile) {
+  console.log((app || remote.app).getPath('userData'))
+  const store = new Store()
+  let profiles = store.get('profiles')
+  if (!profiles) {
+    profiles = []
+  }
+  profiles.push(profile)
+  store.set('profiles', profiles)
+}
+
+ipcRenderer.send('asynchronous-message', 'ping')
+export default {
+  name: 'MainHeader',
+  data () {
+    return {
+      name: '',
+      url: ''
+    }
+  },
+  methods: {
+    onAddServer: function () {
+        if (lodash.isEmpty(this.name) || lodash.isEmpty(this.url)) {
+          console.log('url or name is empty')
+          return
+        }
+        let url = this.url.replace(' ', '')
+        if (!isValidUrls(url)) {
+          console.log('格式不正确', url)
+          return
+        }
+        let profile = {
+          id: uuid(),
+          name: this.name,
+          servers: parseUrls(url)
+        }
+
+        console.log(profile)
+
+        addProfile(profile)
+    }
+  }
+}
+</script>
+
 

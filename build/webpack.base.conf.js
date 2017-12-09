@@ -14,7 +14,7 @@ function resolve (dir) {
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/main.js'
+    app: config.entry
   },
   target: 'electron-renderer',
   externals: [
@@ -32,7 +32,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
+      '@': resolve('src/renderer'),
       'static': resolve('static'),
       'ROOT': resolve('/')
     }

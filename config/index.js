@@ -5,8 +5,10 @@
 const path = require('path')
 
 module.exports = {
+  entry: path.resolve(__dirname, '../src/renderer/main.js'),
+  index: path.resolve(__dirname, '../html/index.html'),
+  template:  path.resolve(__dirname, '../src/renderer/index.html'),
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -49,9 +51,6 @@ module.exports = {
   },
 
   build: {
-    // Template for index.html
-    index: path.resolve(__dirname, '../html/index.html'),
-
     // Paths
     assetsRoot: path.resolve(__dirname, '../html'),
     assetsSubDirectory: 'static',

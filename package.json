@@ -2,7 +2,7 @@
   "name": "hicube",
   "version": "1.0.0",
   "description": "A minimal Electron application",
-  "main": "main.js",
+  "main": "./src/main/main.js",
   "author": "Guotao.Liu <lgt_livezone@live.com>",
   "private": true,
   "keywords": [
@@ -21,12 +21,14 @@
     "electron": "^1.8.1",
     "electron-store": "^1.3.0",
     "ioredis": "^3.2.2",
-    "moment": "^2.19.1",
+    "lodash": "^4.17.4",
+    "moment": "^2.19.3",
+    "uuid": "^3.1.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
-    "autoprefixer": "^7.1.2",
+    "autoprefixer": "^7.2.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^7.1.1",
@@ -63,9 +65,9 @@
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",
-    "webpack": "^3.6.0",
+    "webpack": "^3.10.0",
     "webpack-bundle-analyzer": "^2.9.0",
-    "webpack-dev-server": "^2.9.1",
+    "webpack-dev-server": "^2.9.7",
     "webpack-merge": "^4.1.0"
   },
   "engines": {

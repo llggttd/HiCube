@@ -65,8 +65,8 @@
 </style>
 
 <script>
-import Bus from '../Bus'
-import BusEvent from '../BusEvent'
+import Bus from '@/Bus'
+import BusEvent from '@/BusEvent'
 
 const CURRENT_HOST = '192.168.1.5'
 let profiles = [{
