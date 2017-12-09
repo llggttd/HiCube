@@ -12,11 +12,11 @@
 </template>
 
 <script>
-import MainHeader from '@/components/MainHeader'
-import MainSidebar from '@/components/MainSidebar'
-import ContentWrapper from '@/components/ContentWrapper'
-import MainFooter from '@/components/MainFooter'
-import ControlSidebar from '@/components/ControlSidebar'
+import MainHeader from './components/MainHeader'
+import MainSidebar from './components/MainSidebar'
+import ContentWrapper from './components/ContentWrapper'
+import MainFooter from './components/MainFooter'
+import ControlSidebar from './components/ControlSidebar'
 
 export default {
   name: 'app',

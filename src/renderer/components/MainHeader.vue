@@ -89,13 +89,13 @@
           <div class="modal-body">
             <form class="form-horizontal">
                 <div class="box-body">
-                  <div class="form-group">
+                  <div :class="['form-group', {'has-success': nameValid, 'has-error': !nameValid}]">
                       <label for="inputName" class="col-sm-2 control-label">名称</label>
                       <div class="col-sm-9">
                         <input class="form-control" id="inputName" v-model="name" placeholder="配置名称" type="text">
                       </div>
                   </div>
-                  <div class="form-group">
+                  <div  :class="['form-group', {'has-success': urlValid, 'has-error': !urlValid}]">
                       <label for="inputHost" class="col-sm-2 control-label">地址</label>
                       <div class="col-sm-9">
                         <input class="form-control" id="inputHost" v-model="url" placeholder="如：192.168.1.2:6379, 192.168.3:6379" type="text">
@@ -130,8 +130,7 @@
 <script>
 import {app, remote, ipcRenderer} from 'electron'
 import Store from 'electron-store'
-import lodash from 'lodash'
-import uuid from 'uuid'
+import Profile from '../../main/Profile'
 
 console.log((app || remote.app).getPath('userData'))
 console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
@@ -140,21 +139,6 @@ ipcRenderer.on('asynchronous-reply', (event, arg) => {
   console.log(arg) // prints "pong"
 })
 
-function isValidUrls(urls) {
-  return urls.split(',').every(function (url) {
-    return new RegExp(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{2,5}$/).test(url)
-  })
-}
-
-function parseUrls(urls) {
-  return urls.split(',').map(function (url) {
-    let matcher = url.match(/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{2,5})$/)
-    return {
-      host: matcher[1],
-      port: matcher[2]
-    }
-  })
-}
 
 function addProfile(profile) {
   console.log((app || remote.app).getPath('userData'))
@@ -173,29 +157,39 @@ export default {
   data () {
     return {
       name: '',
-      url: ''
+      nameValid: false,
+      url: '',
+      urlValid: false
+    }
+  },
+  watch: {
+    name: function (newVal, oldVal) {
+      if (Profile.isValidDescription(newVal)) {
+        this.nameValid = true
+      } else {
+        this.nameValid = false
+      }
+    },
+    url: function (newVal, oldVal) {
+      if (Profile.isValidUrl(newVal)) {
+        this.urlValid = true
+      } else {
+        this.urlValid = false
+      }
     }
   },
   methods: {
     onAddServer: function () {
-        if (lodash.isEmpty(this.name) || lodash.isEmpty(this.url)) {
-          console.log('url or name is empty')
+        if (!this.nameValid || !this.urlValid) {
+          console.log('配置格式不正确，name [%s], url [%s]', this.name, this.url)
           return
         }
-        let url = this.url.replace(' ', '')
-        if (!isValidUrls(url)) {
-          console.log('格式不正确', url)
-          return
-        }
-        let profile = {
-          id: uuid(),
-          name: this.name,
-          servers: parseUrls(url)
-        }
-
+        let profile = new Profile()
+        profile.description = this.name
+        profile.server = profile.parseUrl(this.url)
         console.log(profile)
-
         addProfile(profile)
+        window.$('#modal-add').hide()
     }
   }
 }
