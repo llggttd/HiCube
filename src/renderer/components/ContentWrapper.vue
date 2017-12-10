@@ -160,8 +160,8 @@
 </template>
 
 <script>
-import Bus from "../Bus"
-import BusEvent from "../BusEvent"
+import Bus from "@/renderer/Bus"
+import BusEvent from "@/renderer/BusEvent"
 
 let profile = {
   name: '',

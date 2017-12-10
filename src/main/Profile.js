@@ -4,7 +4,7 @@ const REG_URL_VALID = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{2,5}$/
 const REG_URL_SELECT = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{2,5})$/
 
 function Profile (description) {
-  this.id = uuid()
+  this.uid = uuid()
   this.description = description
   this.server = []
   this.isCluster = false
@@ -44,7 +44,8 @@ Profile.prototype.parseUrl = function (url) {
 
 Profile.prototype.setServer = function (server) {
   this.server = server
-  this.isCluster = server.length > 1 ? true : false
+  this.isCluster = server.length > 1
 }
 
+Profile.EVENT = 'event'
 module.exports = Profile

@@ -63,12 +63,7 @@ app.on('window-all-closed', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on('asynchronous-message', (event, arg) => {
-  console.log(arg)  // prints "ping"
-  event.sender.send('asynchronous-reply', 'pong')
-})
+const Config = require('./plugins/Config')
 
-ipcMain.on('synchronous-message', (event, arg) => {
-  console.log(arg)  // prints "ping"
-  event.returnValue = 'pong'
-})
+let config = new Config()
+config.start()

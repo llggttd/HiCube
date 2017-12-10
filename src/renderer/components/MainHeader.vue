@@ -129,29 +129,9 @@
 
 <script>
 import {app, remote, ipcRenderer} from 'electron'
-import Store from 'electron-store'
-import Profile from '../../main/Profile'
+import Profile from '@/main/Profile'
+import Config from '@/main/plugins/Config'
 
-console.log((app || remote.app).getPath('userData'))
-console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
-
-ipcRenderer.on('asynchronous-reply', (event, arg) => {
-  console.log(arg) // prints "pong"
-})
-
-
-function addProfile(profile) {
-  console.log((app || remote.app).getPath('userData'))
-  const store = new Store()
-  let profiles = store.get('profiles')
-  if (!profiles) {
-    profiles = []
-  }
-  profiles.push(profile)
-  store.set('profiles', profiles)
-}
-
-ipcRenderer.send('asynchronous-message', 'ping')
 export default {
   name: 'MainHeader',
   data () {
@@ -188,7 +168,10 @@ export default {
         profile.description = this.name
         profile.server = profile.parseUrl(this.url)
         console.log(profile)
-        addProfile(profile)
+        ipcRenderer.send(Config.ASYNC_MSG_ADD_PROFILE, profile)
+        ipcRenderer.on(Config.ASYNC_MSG_ADD_PROFILE, (event, arg) => {
+          console.log('reply')
+        })
         window.$('#modal-add').hide()
     }
   }

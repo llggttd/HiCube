@@ -65,8 +65,11 @@
 </style>
 
 <script>
-import Bus from '../Bus'
-import BusEvent from '../BusEvent'
+import {ipcRenderer} from 'electron'
+import Bus from '@/renderer/Bus'
+import BusEvent from '@/renderer/BusEvent'
+import Profile from '@/main/Profile'
+import Config from '@/main/plugins/Config'
 
 const CURRENT_HOST = '192.168.1.5'
 let profiles = [{
@@ -146,12 +149,33 @@ let profiles = [{
     }]
 }]
 
+function transProfile(profiles) {
+  return profiles.map(function (profile) {
+    return {
+      uid: profile.uid,
+      name: profile.description,
+      selected: false,
+      cluster: profile.isCluster,
+      connected: false,
+      servers: profile.server
+    }
+  })
+}
+
 export default {
   name: "MainSidebar",
   data () {
     return {
-      profiles: profiles
+      profiles: []
     }
+  },
+  created () {
+    ipcRenderer.send(Config.ASYNC_MSG_LOAD_PROFILE)
+    ipcRenderer.on(Config.ASYNC_MSG_LOAD_PROFILE, (event, arg) => {
+      let profiles = transProfile(arg)
+      console.log(profiles)
+      this.profiles = profiles
+    })
   },
   methods: {
     getItemClass: function (profile) {
