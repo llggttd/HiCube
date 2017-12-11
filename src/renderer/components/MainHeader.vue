@@ -128,9 +128,9 @@
 </style>
 
 <script>
-import {app, remote, ipcRenderer} from 'electron'
+import {ipcRenderer} from 'electron'
 import Profile from '@/main/Profile'
-import Config from '@/main/plugins/Config'
+import MsgConfig from '@/main/msg/MsgConfig'
 
 export default {
   name: 'MainHeader',
@@ -164,14 +164,10 @@ export default {
           console.log('配置格式不正确，name [%s], url [%s]', this.name, this.url)
           return
         }
-        let profile = new Profile()
-        profile.description = this.name
-        profile.server = profile.parseUrl(this.url)
-        console.log(profile)
-        ipcRenderer.send(Config.ASYNC_MSG_ADD_PROFILE, profile)
-        ipcRenderer.on(Config.ASYNC_MSG_ADD_PROFILE, (event, arg) => {
-          console.log('reply')
-        })
+        let profile = new Profile(this.name)
+        profile.setServer(profile.parseUrl(this.url))
+        ipcRenderer.send(MsgConfig.MSG_ASYNC_PROFILE_ADD, profile)
+        console.log('save profile %s', profile)
         window.$('#modal-add').hide()
     }
   }

@@ -2,8 +2,8 @@
   <div class="content-wrapper">
     <section v-if="profile.connected" class="content-header">
       <h1>
-        {{ profile.name }}
-        <small>{{ profile.cluster ? '集群':'单机' }}</small>
+        {{ profile.description }}
+        <small>{{ profile.isCluster ? '集群':'单机' }}</small>
       </h1>
     </section>
     <section v-if="profile.connected" class="content container-fluid">
@@ -163,24 +163,25 @@
 import Bus from "@/renderer/Bus"
 import BusEvent from "@/renderer/BusEvent"
 
-let profile = {
-  name: '',
-  cluster: false,
-  connected: false
-}
-
-Bus.$on(BusEvent.ON_SERVER_ITEM_SELECTED, function (data) {
-  profile.name = data.name
-  profile.port = data.cluster
-  profile.connected = true
-})
-
 export default {
   name: "ContentWrapper",
   data () {
     return {
-      profile: profile
+      profile: {
+        description: '',
+        connected: false,
+        isCluster: false
+      }
     }
+  },
+  created () {
+    let _that = this
+    Bus.$on(BusEvent.ON_SERVER_ITEM_SELECTED, function (data) {
+      console.log(data)
+      _that.profile.description = data.description
+      _that.profile.isCluster = data.isCluster
+      _that.profile.connected = true
+    })
   }
 }
 </script>

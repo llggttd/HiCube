@@ -1,5 +1,2 @@
-const Config = require('./Config')
-
-let config = new Config()
-
-config.init()
+let a = ['1']
+console.log(Array.isArray(a))

@@ -3,11 +3,10 @@ const uuid = require('uuid')
 const REG_URL_VALID = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{2,5}$/
 const REG_URL_SELECT = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{2,5})$/
 
-function Profile (description) {
+function Profile (description, server) {
   this.uid = uuid()
   this.description = description
-  this.server = []
-  this.isCluster = false
+  this.setServer(server)
 }
 
 Profile.isValidDescription = function (description) {
@@ -43,9 +42,12 @@ Profile.prototype.parseUrl = function (url) {
 }
 
 Profile.prototype.setServer = function (server) {
-  this.server = server
-  this.isCluster = server.length > 1
+  if (!Array.isArray(server)) {
+    this.server = []
+  } else {
+    this.server = server
+  }
+  this.isCluster = this.server.length > 1
 }
 
-Profile.EVENT = 'event'
 module.exports = Profile

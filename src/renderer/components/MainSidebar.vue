@@ -12,13 +12,13 @@
       </div>
       <a class="header"><i class="fa fa-tv"></i><span>服务器</span></a>
       <ul class="sidebar-menu tree" data-widget="tree">
-        <li :class="getItemClass(profile)" :key="index" v-for="(profile, index) in profiles" @click="onSelected(index)">
+        <li :class="getItemClass(profile)" :key="profile.uid" v-for="profile in profiles" @click="onItemSelected(profile.uid)">
             <a href="#">
               <i class="fa fa-plug" v-bind:class="{'text-success': profile.connected}"></i>
-              <span>{{ profile.name }}</span>
-              <span v-if="profile.cluster" class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+              <span>{{ profile.description }}</span>
+              <span v-if="profile.isCluster" class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
             </a>
-            <ul v-if="profile.cluster" class="treeview-menu">
+            <ul v-if="profile.isCluster" class="treeview-menu">
               <li v-for="(server, index) in profile.servers" :key="index">
                 <a href="#">
                   <i class="fa fa-circle"></i>
@@ -69,96 +69,27 @@ import {ipcRenderer} from 'electron'
 import Bus from '@/renderer/Bus'
 import BusEvent from '@/renderer/BusEvent'
 import Profile from '@/main/Profile'
-import Config from '@/main/plugins/Config'
-
-const CURRENT_HOST = '192.168.1.5'
-let profiles = [{
-    name: '开发环境',
-    selected: false,
-    cluster: false,
-    connected: false,
-    servers: [{
-        host: "192.168.1.1",
-        port: "6379"
-    }]
-}, {
-    name: '测试环境',
-    selected: false,
-    cluster: false,
-    connected: false,
-    servers: [{
-        host: "192.168.1.2",
-        port: "6379"
-    }]
-}, {
-    name: '测试环境',
-    selected: false,
-    cluster: false,
-    connected: false,
-    servers: [{
-        host: "192.168.1.2",
-        port: "6379"
-    }]
-}, {
-    name: '预发环境',
-    selected: false,
-    cluster: false,
-    connected: false,
-    servers: [{
-        host: "192.168.1.3",
-        port: "6379"
-    }]
-}, {
-    name: '正式环境',
-    selected: false,
-    cluster: false,
-    connected: false,
-    servers: [{
-        host: "192.168.1.4",
-        port: "6379"
-    }]
-}, {
-    name: '开发集群',
-    selected: false,
-    cluster: true,
-    connected: false,
-    servers: [{
-        host: "192.168.1.5",
-        port: "30001"
-    }, {
-        host: "192.168.1.5",
-        port: "30002"
-    }, {
-        host: "192.168.1.5",
-        port: "30003"
-    }]
-}, {
-    name: '测试集群',
-    selected: false,
-    cluster: true,
-    connected: false,
-    servers: [{
-        host: "192.168.1.5",
-        port: "30001"
-    }, {
-        host: "192.168.1.5",
-        port: "30002"
-    }, {
-        host: "192.168.1.5",
-        port: "30003"
-    }]
-}]
+import MsgConfig from '@/main/msg/MsgConfig'
 
 function transProfile(profiles) {
   return profiles.map(function (profile) {
     return {
       uid: profile.uid,
-      name: profile.description,
+      description: profile.description,
       selected: false,
-      cluster: profile.isCluster,
+      isCluster: profile.isCluster,
       connected: false,
       servers: profile.server
     }
+  })
+}
+
+function reload(target) {
+  ipcRenderer.send(MsgConfig.MSG_ASYNC_PROFILE_LOAD)
+  ipcRenderer.on(MsgConfig.MSG_ASYNC_PROFILE_LOAD, (event, arg) => {
+    let profiles = transProfile(arg)
+      console.log(profiles)
+      target.profiles = profiles
   })
 }
 
@@ -170,33 +101,40 @@ export default {
     }
   },
   created () {
-    ipcRenderer.send(Config.ASYNC_MSG_LOAD_PROFILE)
-    ipcRenderer.on(Config.ASYNC_MSG_LOAD_PROFILE, (event, arg) => {
-      let profiles = transProfile(arg)
-      console.log(profiles)
-      this.profiles = profiles
-    })
+      reload(this)
+      ipcRenderer.on(MsgConfig.MSG_ASYNC_PROFILE_RELOAD, (event, arg) => {
+        reload(this)
+      })
   },
   methods: {
-    getItemClass: function (profile) {
+    getItemClass: function (item) {
       return {
-        'active': profile.selected,
-        'treeview': profile.cluster,
+        'active': item.selected,
+        'treeview': item.cluster,
       }
     },
-    changeSelectStatus: function (index) {
-      profiles.forEach(function (profile, i) {
-        if (i == index) {
-          profile.selected = true
+    getItem: function (uid) {
+      return this.profiles.find(function (item) {
+        if (item.uid === uid) {
+          return true
         } else {
-          profile.selected = false
+          return false
         }
       })
     },
-    onSelected: function (index) {
-      this.changeSelectStatus(index)
-      Bus.$emit(BusEvent.ON_SERVER_ITEM_SELECTED, profiles[index])
-      console.log('EMIT -- ', index)
+    changeItemStatus: function (uid) {
+      this.profiles.forEach(function (item) {
+        if (item.uid === uid) {
+          item.selected = true
+        } else {
+          item.selected = false
+        }
+      })
+    },
+    onItemSelected: function (uid) {
+      this.changeItemStatus(uid)
+      Bus.$emit(BusEvent.ON_SERVER_ITEM_SELECTED, this.getItem(uid))
+      console.log('EMIT -- %s', uid)
     }
   }
 }
