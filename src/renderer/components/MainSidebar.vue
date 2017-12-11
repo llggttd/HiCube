@@ -69,7 +69,7 @@ import {ipcRenderer} from 'electron'
 import Bus from '@/renderer/Bus'
 import BusEvent from '@/renderer/BusEvent'
 import Profile from '@/main/Profile'
-import MsgConfig from '@/main/msg/MsgConfig'
+import MsgConfig from '@/main/plugins/redis/MsgConfig'
 
 function transProfile(profiles) {
   return profiles.map(function (profile) {

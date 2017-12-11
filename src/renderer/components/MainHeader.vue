@@ -130,7 +130,7 @@
 <script>
 import {ipcRenderer} from 'electron'
 import Profile from '@/main/Profile'
-import MsgConfig from '@/main/msg/MsgConfig'
+import MsgConfig from '@/main/plugins/redis/MsgConfig'
 
 export default {
   name: 'MainHeader',

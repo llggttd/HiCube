@@ -1,5 +1,5 @@
 const Plugin = require('../Plugin')
-const MsgConfig = require('../msg/MsgConfig')
+const MsgConfig = require('./MsgConfig')
 const {app, ipcMain} = require('electron')
 const Store = require('electron-store')
 
