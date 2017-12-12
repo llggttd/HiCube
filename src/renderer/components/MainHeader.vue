@@ -168,7 +168,7 @@ export default {
         profile.setServer(profile.parseUrl(this.url))
         ipcRenderer.send(MsgConfig.MSG_ASYNC_PROFILE_ADD, profile)
         console.log('save profile %s', profile)
-        window.$('#modal-add').hide()
+        $('#modal-add').modal('hide')
     }
   }
 }
