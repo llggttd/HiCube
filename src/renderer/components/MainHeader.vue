@@ -130,7 +130,7 @@
 <script>
 import {ipcRenderer} from 'electron'
 import Profile from '@/main/Profile'
-import MsgConfig from '@/main/plugins/redis/MsgConfig'
+import MsgConfig from '@/main/plugins/config/MSG'
 
 export default {
   name: 'MainHeader',
@@ -166,7 +166,7 @@ export default {
         }
         let profile = new Profile(this.name)
         profile.setServer(profile.parseUrl(this.url))
-        ipcRenderer.send(MsgConfig.MSG_ASYNC_PROFILE_ADD, profile)
+        ipcRenderer.send(MsgConfig.ASYNC_PROFILE_ADD, profile)
         console.log('save profile %s', profile)
         $('#modal-add').modal('hide')
     }

@@ -1,5 +1,5 @@
 const Plugin = require('../Plugin')
-const MsgConfig = require('./MsgConfig')
+const MSG = require('./MSG')
 const {app, ipcMain} = require('electron')
 const Store = require('electron-store')
 
@@ -42,16 +42,16 @@ Config.prototype.loadProfile = function () {
 }
 
 Config.prototype.init = function () {
-  ipcMain.on(MsgConfig.MSG_ASYNC_PROFILE_ADD, (event, arg) => {
+  ipcMain.on(MSG.ASYNC_PROFILE_ADD, (event, arg) => {
     this.addProfile(arg)
-    event.sender.send(MsgConfig.MSG_ASYNC_PROFILE_RELOAD, true)
+    event.sender.send(MSG.ASYNC_PROFILE_RELOAD, true)
   })
-  ipcMain.on(MsgConfig.MSG_ASYNC_PROFILE_REMOVE, (event, arg) => {
+  ipcMain.on(MSG.ASYNC_PROFILE_REMOVE, (event, arg) => {
     this.removeProfile(arg)
-    event.sender.send(MsgConfig.MSG_ASYNC_PROFILE_RELOAD, true)
+    event.sender.send(MSG.ASYNC_PROFILE_RELOAD, true)
   })
-  ipcMain.on(MsgConfig.MSG_ASYNC_PROFILE_LOAD, (event, arg) => {
-    event.sender.send(MsgConfig.MSG_ASYNC_PROFILE_LOAD, this.loadProfile())
+  ipcMain.on(MSG.ASYNC_PROFILE_LOAD, (event, arg) => {
+    event.sender.send(MSG.ASYNC_PROFILE_LOAD, this.loadProfile())
   })
 }
 

@@ -69,7 +69,7 @@ import {ipcRenderer} from 'electron'
 import Bus from '@/renderer/Bus'
 import BusEvent from '@/renderer/BusEvent'
 import Profile from '@/main/Profile'
-import MsgConfig from '@/main/plugins/redis/MsgConfig'
+import MsgConfig from '@/main/plugins/config/MSG'
 
 function transProfile(profiles) {
   return profiles.map(function (profile) {
@@ -85,8 +85,8 @@ function transProfile(profiles) {
 }
 
 function reload(target) {
-  ipcRenderer.send(MsgConfig.MSG_ASYNC_PROFILE_LOAD)
-  ipcRenderer.on(MsgConfig.MSG_ASYNC_PROFILE_LOAD, (event, arg) => {
+  ipcRenderer.send(MsgConfig.ASYNC_PROFILE_LOAD)
+  ipcRenderer.on(MsgConfig.ASYNC_PROFILE_LOAD, (event, arg) => {
     let profiles = transProfile(arg)
       console.log(profiles)
       target.profiles = profiles
@@ -102,7 +102,7 @@ export default {
   },
   created () {
       reload(this)
-      ipcRenderer.on(MsgConfig.MSG_ASYNC_PROFILE_RELOAD, (event, arg) => {
+      ipcRenderer.on(MsgConfig.ASYNC_PROFILE_RELOAD, (event, arg) => {
         reload(this)
       })
   },

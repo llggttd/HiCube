@@ -1,4 +1,4 @@
-const Config = require('./redis/Config')
+const Config = require('./config')
 
 let PLUGINS = []
 PLUGINS.push(new Config())
